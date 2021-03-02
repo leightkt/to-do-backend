@@ -5,8 +5,8 @@ class UsersController < ApplicationController
 
         if @user.valid?
             @user.save
-            @token = JWT.encode({user_id: @user_id}, "chickenWingsandBoobs")
-            render json: { user: @user, token: @token }, status: :created
+            @token = JWT.encode({user_id: @user_id}, "boobsAndBuffaloWings")
+            render json: { user: @user, todos: @user.todos token: @token }, status: :created
         else
             render json: {errors: @user.errors.full_messages}, status: :not_acceptable
         end
