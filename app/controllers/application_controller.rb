@@ -1,16 +1,18 @@
 class ApplicationController < ActionController::API
+
+    before_action :authorized, except: [:login]
     
     def current_user
         auth_header = request.headers["Authorization"]
         if auth_header
             token = auth_header.split(" ")[1]
             begin
-                user_id = JWT.decode(token, "boobsAndBuffaloWings")[0][:user_id]
+                @user_id = JWT.decode(token, "boobsAndBuffaloWings")[0]["user_id"]
             rescue JWT::DecodeError
                 nil
             end
         end
-        @user = User.find(user_id)
+        @user = User.find(@user_id)
     end
 
     def logged_in?
@@ -18,7 +20,7 @@ class ApplicationController < ActionController::API
     end
 
     def authorized 
-        render json: {message: "Please log in"}, status :unauthorized unless logged_in?
+        render json: {message: "Please log in"}, status: :unauthorized unless logged_in?
     end
 
     def login
